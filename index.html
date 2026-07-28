@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> CodeShala Code Editor </title>
+
+    <!-- CSS Link -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+   <!-- LOGIN SCREEN -->
+  <div class="login-container" id="loginContainer">
+    <video autoplay muted loop playsinline id="bgVideo" class="login__bg">
+      <source src="https://github.com/KIS566/Kishan-verma/raw/main/Zhang%20Xiao%20fan%20and%20Lu%20Xuqi%20kiss%20Seen%20%23shorts%20%23donghua.mp4" type="video/mp4">
+    </video>
+    <div class="video-overlay"></div>
+    <button class="sound-btn" id="soundPermissionBtn"><i class="ri-volume-up-line"></i> Enable Sound</button>
+    
+    <div class="forms-wrapper">
+      <div class="forms-container" id="formsContainer">
+        <form class="login__form login-form" id="loginForm" autocomplete="on">
+          <h1 class="login__title">🚀 Welcome Back</h1>
+          <div id="loginError" class="login__error"></div>
+          <div id="loginSuccess" class="login__success"></div>
+          <div class="login__inputs">
+            <div class="login__box"><i class="ri-user-3-line login__icon"></i><input type="email" placeholder="Email address" required id="loginEmail" class="login__input" autocomplete="email"></div>
+            <div class="login__box"><i class="ri-lock-2-line login__icon"></i><input type="password" placeholder="Password" required id="loginPassword" class="login__input" autocomplete="current-password"><i class="ri-eye-off-line login__eye" id="toggleLoginPassword"></i></div>
+          </div>
+          <div class="login__check"><label><input type="checkbox" id="remember"> Remember me</label><a href="#" class="login__forgot" id="forgotPassword">Forgot Password?</a></div>
+          <button type="submit" class="login__button" id="loginBtn">Sign In</button>
+          <div class="login__register">Don't have an account? <a id="show-register">Create one</a></div>
+        </form>
+        <form class="login__form register-form" id="registerForm" autocomplete="on">
+          <h1 class="login__title">✨ Create Account</h1>
+          <div id="registerError" class="login__error"></div>
+          <div id="registerSuccess" class="login__success"></div>
+          <div class="login__inputs">
+            <div class="login__box"><i class="ri-user-3-line login__icon"></i><input type="text" placeholder="Full Name" required id="regName" class="login__input" autocomplete="name"></div>
+            <div class="login__box"><i class="ri-mail-line login__icon"></i><input type="email" placeholder="Email address" required id="regEmail" class="login__input" autocomplete="email"></div>
+            <div class="login__box"><i class="ri-lock-2-line login__icon"></i><input type="password" placeholder="Password (min 6 characters)" required id="regPassword" class="login__input" autocomplete="new-password"><i class="ri-eye-off-line login__eye" id="toggleRegPassword"></i></div>
+          </div>
+          <button type="submit" class="login__button" id="registerBtn">Create Account</button>
+          <div class="back-to-login">Already have an account? <a id="show-login">Sign In</a></div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- IDE -->
+  <div id="app">
+    <header class="toolbar">
+      <div class="brand"><i class="ri-code-s-slash-line" style="color:var(--primary);"></i> <span class="label">CodeShala</span></div>
+      <div class="actions">
+        <button class="btn" id="newFileBtn"><i class="ri-file-add-line"></i> <span class="label">New</span></button>
+        <button class="btn" id="saveFileBtn"><i class="ri-save-line"></i> <span class="label">Save</span></button>
+        <button class="btn btn-success" id="saveLocalBtn"><i class="ri-folder-download-line"></i> <span class="label">Save to Device</span></button>
+        <button class="btn" id="formatBtn"><i class="ri-braces-line"></i> <span class="label">Format</span></button>
+        <button class="btn" id="exportHtmlBtn"><i class="ri-file-code-line"></i> <span class="label">HTML</span></button>
+        <button class="btn" id="downloadZipBtn"><i class="ri-download-2-line"></i> <span class="label">ZIP</span></button>
+        <button class="btn btn-primary" id="runBtn"><i class="ri-play-fill"></i> <span class="label">Run</span></button>
+        <button class="btn" id="runCurrentBtn"><i class="ri-play-circle-line"></i> <span class="label">Run This</span></button>
+        <button class="btn" id="themeToggle"><i class="ri-moon-line"></i> <span class="label">Theme</span></button>
+        <button class="btn" id="fullscreenBtn"><i class="ri-fullscreen-line"></i></button>
+        <button class="btn" id="logoutBtn"><i class="ri-logout-box-r-line"></i></button>
+      </div>
+    </header>
+    
+    <div class="main-container" id="mainContainer">
+      <div class="file-explorer" id="fileExplorer">
+        <div class="file-explorer-header"><span>📁 Files</span><button class="btn" id="addFileBtn"><i class="ri-add-line"></i></button></div>
+        <div class="file-list" id="fileList"></div>
+      </div>
+      <div class="editor-panel" id="editorPanel">
+        <div class="tabs-bar" id="tabsBar"></div>
+        <div class="editor-wrapper" id="editorWrapper"><textarea class="fallback-editor" id="fallbackEditor"></textarea></div>
+        <div class="status-bar">
+          <span><span id="cursorPos">Ln 1, Col 1</span> | <span id="fileLang">HTML</span></span>
+          <span><span id="wordCount">0</span> words | <span id="fileSize">0 KB</span></span>
+        </div>
+      </div>
+      <div class="preview-panel" id="desktopPreview">
+        <div class="preview-header">
+          <span>🌐 Live Preview</span>
+          <div class="controls">
+            <button class="btn" id="refreshPreview"><i class="ri-refresh-line"></i></button>
+            <button class="btn" id="openNewTab"><i class="ri-external-link-line"></i></button>
+            <button class="btn" id="toggleConsole"><i class="ri-terminal-box-line"></i></button>
+            <select id="previewSize">
+              <option value="100%">💻 100%</option>
+              <option value="375px">📱 375px</option>
+              <option value="768px">📱 768px</option>
+              <option value="1200px">💻 1200px</option>
+            </select>
+          </div>
+        </div>
+        <div class="preview-frame-wrap"><iframe class="preview-frame" id="previewFrame" sandbox="allow-scripts allow-modals allow-forms allow-popups allow-same-origin"></iframe></div>
+        <div class="console-panel" id="consolePanel"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Preview Overlay -->
+  <div id="mobilePreviewOverlay">
+    <div class="overlay-header">
+      <button class="back-btn" id="closeMobilePreview"><i class="ri-arrow-left-line"></i> Back to Editor</button>
+      <span style="margin-left:16px;font-weight:600;color:var(--text)">Live Preview</span>
+      <div style="flex:1"></div>
+      <button class="btn" id="mobileRefreshPreview"><i class="ri-refresh-line"></i></button>
+      <button class="btn" id="mobileToggleConsole"><i class="ri-terminal-box-line"></i></button>
+    </div>
+    <div class="overlay-content">
+      <div class="preview-frame-wrap"><iframe class="preview-frame" id="mobilePreviewFrame" sandbox="allow-scripts allow-modals allow-forms allow-popups allow-same-origin"></iframe></div>
+      <div class="console-panel" id="mobileConsolePanel"></div>
+    </div>
+  </div>
+
+  <!-- MODALS -->
+  <div class="modal" id="newFileModal" style="background:var(--surface);box-shadow:var(--neumorph);border-radius:20px;display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2000;padding:24px;min-width:300px;max-width:90vw;">
+    <h3>📄 New File</h3>
+    <label>File name</label>
+    <input type="text" id="newFileName" placeholder="e.g., about.html" style="background:var(--bg);box-shadow:var(--neumorph-inset);border:none;color:var(--text);padding:12px;width:100%;margin:8px 0;">
+    <label>Language</label>
+    <select id="newFileLang" style="background:var(--bg);box-shadow:var(--neumorph-inset);border:none;color:var(--text);padding:12px;width:100%;margin:8px 0;">
+      <option value="html">HTML</option>
+      <option value="css">CSS</option>
+      <option value="javascript">JavaScript</option>
+      <option value="json">JSON</option>
+      <option value="markdown">Markdown</option>
+    </select>
+    <div class="modal-actions" style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;">
+      <button class="btn btn-primary" id="confirmNewFile">Create</button>
+      <button class="btn" id="closeNewFile">Cancel</button>
+    </div>
+  </div>
+
+  <div class="modal" id="folderModal" style="background:var(--surface);box-shadow:var(--neumorph);border-radius:20px;display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2000;padding:24px;min-width:300px;max-width:90vw;">
+    <h3>📁 Save to Device</h3>
+    <label>Folder name</label>
+    <input type="text" id="folderNameInput" placeholder="My Project" value="CodeShala-Project" style="background:var(--bg);box-shadow:var(--neumorph-inset);border:none;color:var(--text);padding:12px;width:100%;margin:8px 0;">
+    <p style="font-size:0.75rem;color:var(--text2);margin:4px 0"><i class="ri-information-line"></i> All files will be saved in this folder</p>
+    <div class="modal-actions" style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;">
+      <button class="btn btn-success" id="confirmSaveLocal">Save</button>
+      <button class="btn" id="closeFolderModal">Cancel</button>
+    </div>
+  </div>
+
+    <!-- JavaScript Link -->
+    <script src="script.js"></script>
+</body>
+</html>
